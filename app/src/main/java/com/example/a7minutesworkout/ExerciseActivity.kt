@@ -1,5 +1,6 @@
 package com.example.a7minutesworkout
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -20,8 +21,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restTimer: CountDownTimer? = null
     private var restProgress = 0
 
+    private var restTimeDuration: Long = 1
+
     private var exerciseTimer: CountDownTimer? = null
     private var exerciseProgress = 0
+
+    private var exerciseTimeDuration: Long = 1
 
     private lateinit var exerciseList : ArrayList<ExerciseModel>
     private var currentExercisePosition = -1
@@ -48,7 +53,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech = TextToSpeech(this, this)
 
         binding.toolbarEX.setNavigationOnClickListener {
-            onBackPressed()
         }
 
         setupRestView()
@@ -113,7 +117,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun setRestProgressBar(){
         binding.progressBar.progress = restProgress
-        restTimer = object : CountDownTimer(10000, 1000){
+        restTimer = object : CountDownTimer(restTimeDuration * 1000, 1000){
             override fun onTick(p0: Long) {
                 restProgress++
                 binding.progressBar.progress = 10 - restProgress
@@ -131,7 +135,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun setExerciseProgressBar(){
         binding.progressBarExercise.progress = exerciseProgress
-        exerciseTimer = object : CountDownTimer(30000, 1000){
+        exerciseTimer = object : CountDownTimer(exerciseTimeDuration * 1000, 1000){
             override fun onTick(p0: Long) {
                 exerciseProgress++
                 binding.progressBarExercise.progress = 30 - exerciseProgress
@@ -139,13 +143,15 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
-                exerciseList[currentExercisePosition].setIsSelected(false)
-                exerciseList[currentExercisePosition].setIsCompleted(true)
-                exerciseAdapter.notifyDataSetChanged()
                 if (currentExercisePosition < exerciseList.size - 1){
+                    exerciseList[currentExercisePosition].setIsSelected(false)
+                    exerciseList[currentExercisePosition].setIsCompleted(true)
+                    exerciseAdapter.notifyDataSetChanged()
                     setupRestView()
                 }else{
-                    Toast.makeText(this@ExerciseActivity, "Con", Toast.LENGTH_SHORT).show()
+                    finish()
+                    val intent = Intent(this@ExerciseActivity, FinishActivity::class.java)
+                    startActivity(intent)
                 }
             }
         }.start()
