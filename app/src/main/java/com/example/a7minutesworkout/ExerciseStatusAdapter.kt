@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.a7minutesworkout.databinding.ItemExersiceStatusBinding
 
-class ExerciseStatusAdapter(val items: ArrayList<ExerciseModel>):
+class ExerciseStatusAdapter(private val items: ArrayList<ExerciseModel>):
     RecyclerView.Adapter<ExerciseStatusAdapter.ViewHolder>() {
 
         class ViewHolder(binding: ItemExersiceStatusBinding):
