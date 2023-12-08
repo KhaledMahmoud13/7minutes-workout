@@ -1,1 +1,1 @@
-# 7min
+# 7 Minutes Workout
